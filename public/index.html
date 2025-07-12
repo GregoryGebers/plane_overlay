@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plane Message Overlay</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: transparent;
+    }
+    .plane-container {
+      position: absolute;
+      top: 20%;
+      left: -100%;
+      display: flex;
+      align-items: center;
+      animation: fly 10s linear forwards;
+    }
+    .plane {
+      width: 100px;
+    }
+    .banner {
+      margin-left: 10px;
+      background-color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 24px;
+      font-family: sans-serif;
+      white-space: nowrap;
+    }
+    @keyframes fly {
+      from { left: 100%; }
+      to { left: -110%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="messages"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const messageContainer = document.getElementById('messages');
+
+    socket.on('newMessage', (msg) => {
+      const container = document.createElement('div');
+      container.className = 'plane-container';
+
+      const planeImg = document.createElement('img');
+      planeImg.src = '/jetthing.gif';
+      planeImg.className = 'plane';
+
+      const banner = document.createElement('div');
+      banner.className = 'banner';
+      banner.textContent = msg;
+
+      container.appendChild(planeImg);
+      container.appendChild(banner);
+      messageContainer.appendChild(container);
+
+      // Remove after animation completes
+      setTimeout(() => {
+        messageContainer.removeChild(container);
+      }, 10000);
+    });
+  </script>
+</body>
+</html>
